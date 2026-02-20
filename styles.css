@@ -1,0 +1,562 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #1a1a2e;
+    --bg-card: #16162a;
+    --accent: #00d4ff;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0b0;
+    --border: #2a2a3e;
+    --green: #00ff88;
+    --yellow: #ffbb00;
+    --red: #ff4444;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+    padding: 2rem 0;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.logo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    padding: 0 1.5rem 2rem;
+    letter-spacing: 0.5px;
+}
+
+.nav-menu {
+    list-style: none;
+}
+
+.nav-link {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.nav-link:hover {
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.nav-link.active {
+    background: rgba(0, 212, 255, 0.15);
+    color: var(--accent);
+    border-left-color: var(--accent);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    margin-left: 250px;
+    padding: 2rem;
+    max-width: 100%;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+}
+
+/* KPI Grid */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+}
+
+.kpi-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Milestone Tracker */
+.milestone-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.milestone-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.milestone-item.current {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+.milestone-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.milestone-month {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.milestone-target {
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.progress-bar {
+    height: 30px;
+    background: var(--bg-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #0099cc);
+    border-radius: 15px;
+    transition: width 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.projection-info {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.projection-label {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.projection-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--green);
+}
+
+/* Forms */
+.form-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 600px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.auto-pulled {
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* Buttons */
+.btn-primary {
+    padding: 0.75rem 1.5rem;
+    background: var(--accent);
+    color: var(--bg-primary);
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 1.5rem;
+}
+
+.btn-primary:hover {
+    background: #00b8e6;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    padding: 0.5rem 1rem;
+    background: var(--bg-secondary);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+}
+
+.btn-danger {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    color: var(--red);
+    border: 1px solid var(--red);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-danger:hover {
+    background: var(--red);
+    color: var(--text-primary);
+}
+
+.btn-edit {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    transition: all 0.2s;
+}
+
+.btn-edit:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+}
+
+/* Tables */
+.table-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    text-align: left;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+}
+
+.data-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+.data-table tbody tr:hover {
+    background: rgba(0, 212, 255, 0.05);
+}
+
+.status-healthy {
+    color: var(--green);
+    font-weight: 600;
+}
+
+.status-warning {
+    color: var(--yellow);
+    font-weight: 600;
+}
+
+.status-down,
+.status-failing {
+    color: var(--red);
+    font-weight: 600;
+}
+
+.status-active {
+    color: var(--green);
+    font-weight: 600;
+}
+
+.status-inactive {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Pipeline Stats */
+.pipeline-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Filter Tabs */
+.filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-tab {
+    padding: 0.5rem 1rem;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-tab.active {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+}
+
+/* Goals Hierarchy */
+.goals-hierarchy {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.goal-level {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+.goal-card {
+    margin-top: 1rem;
+}
+
+.goal-item {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-left: 3px solid var(--accent);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.goal-card textarea {
+    width: 100%;
+    min-height: 100px;
+    margin-bottom: 1rem;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close:hover {
+    color: var(--red);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+    
+    .kpi-grid,
+    .stats-grid,
+    .pipeline-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .app {
+        flex-direction: column;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+    }
+}

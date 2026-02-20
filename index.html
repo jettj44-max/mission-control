@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">MISSION CONTROL</div>
+            <ul class="nav-menu">
+                <li><a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a></li>
+                <li><a href="#milestones" class="nav-link" data-section="milestones">Milestones</a></li>
+                <li><a href="#activity" class="nav-link" data-section="activity">Daily Activity</a></li>
+                <li><a href="#weekly" class="nav-link" data-section="weekly">Weekly Rollup</a></li>
+                <li><a href="#clients" class="nav-link" data-section="clients">Clients</a></li>
+                <li><a href="#automations" class="nav-link" data-section="automations">Automation Lab</a></li>
+                <li><a href="#pipeline" class="nav-link" data-section="pipeline">Pipeline</a></li>
+                <li><a href="#systems" class="nav-link" data-section="systems">Systems</a></li>
+                <li><a href="#review" class="nav-link" data-section="review">Weekly Review</a></li>
+                <li><a href="#goals" class="nav-link" data-section="goals">Goal Cascade</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <h1>Revenue Engine</h1>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-label">MRR</div>
+                        <div class="kpi-value" id="kpi-mrr">$0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">New Revenue This Month</div>
+                        <div class="kpi-value" id="kpi-new-revenue">$0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Clients Active</div>
+                        <div class="kpi-value" id="kpi-clients">0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Pipeline Value</div>
+                        <div class="kpi-value" id="kpi-pipeline">$0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Close Rate</div>
+                        <div class="kpi-value" id="kpi-close-rate">0%</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Outreach Sent (Weekly)</div>
+                        <div class="kpi-value" id="kpi-outreach">0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Calls Booked</div>
+                        <div class="kpi-value" id="kpi-calls">0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Automations Deployed</div>
+                        <div class="kpi-value" id="kpi-automations">0</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Revenue Milestones Section -->
+            <section id="milestones" class="section">
+                <h1>Revenue Milestone Tracker</h1>
+                <div class="milestone-container">
+                    <div class="milestone-item">
+                        <div class="milestone-header">
+                            <span class="milestone-month">Month 1</span>
+                            <span class="milestone-target">$500</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-milestone="500"></div>
+                        </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-header">
+                            <span class="milestone-month">Month 2</span>
+                            <span class="milestone-target">$2,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-milestone="2000"></div>
+                        </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-header">
+                            <span class="milestone-month">Month 3</span>
+                            <span class="milestone-target">$3,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-milestone="3000"></div>
+                        </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-header">
+                            <span class="milestone-month">Month 4</span>
+                            <span class="milestone-target">$5,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-milestone="5000"></div>
+                        </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-header">
+                            <span class="milestone-month">Month 5</span>
+                            <span class="milestone-target">$6,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-milestone="6000"></div>
+                        </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-header">
+                            <span class="milestone-month">Month 6</span>
+                            <span class="milestone-target">$8,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-milestone="8000"></div>
+                        </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-header">
+                            <span class="milestone-month">Month 7</span>
+                            <span class="milestone-target">$9,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-milestone="9000"></div>
+                        </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-header">
+                            <span class="milestone-month">Month 8</span>
+                            <span class="milestone-target">$10,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-milestone="10000"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="projection-info">
+                    <div class="projection-label">Projected Trajectory:</div>
+                    <div class="projection-value" id="projection-value">$0/month</div>
+                </div>
+            </section>
+
+            <!-- Daily Activity Section -->
+            <section id="activity" class="section">
+                <h1>Daily Activity Inputs</h1>
+                <div class="form-card">
+                    <form id="activity-form">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="activity-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cold Emails Sent</label>
+                            <input type="number" id="cold-emails" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>DMs Sent</label>
+                            <input type="number" id="dms-sent" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Calls Made</label>
+                            <input type="number" id="calls-made" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Follow-ups Sent</label>
+                            <input type="number" id="followups-sent" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Leads Scraped</label>
+                            <input type="number" id="leads-scraped" min="0" value="0">
+                        </div>
+                        <button type="submit" class="btn-primary">Save Activity</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Weekly Rollup Section -->
+            <section id="weekly" class="section">
+                <h1>Weekly Rollup</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Outreach Volume</div>
+                        <div class="stat-value" id="weekly-outreach">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Reply Rate</div>
+                        <div class="stat-value" id="weekly-reply-rate">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Book Rate</div>
+                        <div class="stat-value" id="weekly-book-rate">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Close Rate</div>
+                        <div class="stat-value" id="weekly-close-rate">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Conversion Rate</div>
+                        <div class="stat-value" id="weekly-conversion-rate">0%</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clients Section -->
+            <section id="clients" class="section">
+                <h1>Client Tracker</h1>
+                <button class="btn-primary" onclick="app.showClientModal()">+ Add Client</button>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Client Name</th>
+                                <th>Automation Type</th>
+                                <th>Setup Date</th>
+                                <th>Monthly Fee</th>
+                                <th>Health Status</th>
+                                <th>Last Check</th>
+                                <th>Renewal Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clients-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Automation Lab Section -->
+            <section id="automations" class="section">
+                <h1>Automation Lab</h1>
+                <button class="btn-primary" onclick="app.showAutomationModal()">+ Add Automation</button>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Automation Name</th>
+                                <th>Niche</th>
+                                <th>Status</th>
+                                <th>Time to Deploy</th>
+                                <th>Revenue Impact</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="automations-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Pipeline Section -->
+            <section id="pipeline" class="section">
+                <h1>Pipeline / CRM</h1>
+                <button class="btn-primary" onclick="app.showPipelineModal()">+ Add Lead</button>
+                <div class="pipeline-stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Pipeline Value</div>
+                        <div class="stat-value" id="total-pipeline-value">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Weighted Revenue</div>
+                        <div class="stat-value" id="weighted-revenue">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Close Rate</div>
+                        <div class="stat-value" id="pipeline-close-rate">0%</div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Lead Name</th>
+                                <th>Source</th>
+                                <th>Estimated Value</th>
+                                <th>Close Probability</th>
+                                <th>Stage</th>
+                                <th>Outreach Tasks</th>
+                                <th>Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pipeline-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Systems Section -->
+            <section id="systems" class="section">
+                <h1>Agent / System Tracking</h1>
+                <button class="btn-primary" onclick="app.showSystemModal()">+ Add System</button>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="app.filterSystems('all')">All</button>
+                    <button class="filter-tab" onclick="app.filterSystems('active')">Active Only</button>
+                    <button class="filter-tab" onclick="app.filterSystems('failing')">Failing Only</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Agent Name</th>
+                                <th>Function</th>
+                                <th>Status</th>
+                                <th>Last Run</th>
+                                <th>Success Rate</th>
+                                <th>Linked Workflows</th>
+                                <th>Impact Metric</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="systems-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Weekly Review Section -->
+            <section id="review" class="section">
+                <h1>Weekly Review</h1>
+                <div class="form-card">
+                    <form id="review-form">
+                        <div class="form-group">
+                            <label>Week Ending</label>
+                            <input type="date" id="review-week" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Wins</label>
+                            <textarea id="review-wins" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Misses</label>
+                            <textarea id="review-misses" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Revenue Review (Auto-Pulled)</label>
+                            <div class="auto-pulled" id="review-revenue">MRR: $0 | New Revenue: $0</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Pipeline Review (Auto-Pulled)</label>
+                            <div class="auto-pulled" id="review-pipeline-value">Pipeline Value: $0</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Goal Progress (Auto-Pulled)</label>
+                            <div class="auto-pulled" id="review-goal-progress">Clients: 0 / Target: 5</div>
+                        </div>
+                        <div class="form-group">
+                            <label>System Issues</label>
+                            <textarea id="review-issues" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Process Improvements</label>
+                            <textarea id="review-improvements" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Focus for Next Week</label>
+                            <textarea id="review-focus" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">Save Review</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Goal Cascade Section -->
+            <section id="goals" class="section">
+                <h1>Goal Cascade</h1>
+                <div class="goals-hierarchy">
+                    <div class="goal-level">
+                        <h2>Annual Vision</h2>
+                        <div class="goal-card">
+                            <div class="goal-item">$10k MRR</div>
+                            <textarea id="goal-annual" placeholder="Specific client/system goals"></textarea>
+                            <button class="btn-secondary" onclick="app.saveGoals()">Save</button>
+                        </div>
+                    </div>
+                    <div class="goal-level">
+                        <h2>90-Day Objectives</h2>
+                        <div class="goal-card">
+                            <div class="goal-item">5 Clients, $2,500/month minimum</div>
+                            <textarea id="goal-90day" placeholder="Additional 90-day objectives"></textarea>
+                            <button class="btn-secondary" onclick="app.saveGoals()">Save</button>
+                        </div>
+                    </div>
+                    <div class="goal-level">
+                        <h2>Weekly Targets</h2>
+                        <div class="goal-card">
+                            <textarea id="goal-weekly" placeholder="Weekly commitments"></textarea>
+                            <button class="btn-secondary" onclick="app.saveGoals()">Save</button>
+                        </div>
+                    </div>
+                    <div class="goal-level">
+                        <h2>Daily Focus</h2>
+                        <div class="goal-card">
+                            <textarea id="goal-daily" placeholder="Today's priorities"></textarea>
+                            <button class="btn-secondary" onclick="app.saveGoals()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Templates -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="app.closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
