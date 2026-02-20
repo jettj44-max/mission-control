@@ -3,415 +3,2717 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mission Control</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>🚀 MISSION CONTROL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --accent: #00D4AA;
+            --bg: #050508;
+            --glass: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --text: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --text-dimmer: rgba(255, 255, 255, 0.4);
+            --red: #FF4444;
+            --orange: #FF9500;
+            --yellow: #FFD700;
+            --green: #00D4AA;
+            --blue: #0A84FF;
+            --purple: #BF5AF2;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(5, 5, 8, 0.8);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-tab {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-tab.active {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            font-size: 0.875rem;
+            width: 200px;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-dimmer);
+        }
+
+        .live-clock {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Grid Layouts */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+
+        /* Welcome Section */
+        .welcome {
+            margin-bottom: 2rem;
+        }
+
+        .welcome h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-time {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        /* Metric Cards */
+        .metric-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .metric-card.accent-green::before { background: var(--green); }
+        .metric-card.accent-blue::before { background: var(--blue); }
+        .metric-card.accent-purple::before { background: var(--purple); }
+        .metric-card.accent-orange::before { background: var(--orange); }
+
+        .metric-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .metric-trend {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        /* Boss Battle */
+        .boss-battle {
+            background: rgba(255, 68, 68, 0.08);
+            border-color: rgba(255, 68, 68, 0.2);
+            margin: 2rem 0;
+        }
+
+        .boss-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .boss-title h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .boss-subtitle {
+            color: var(--text-dim);
+            font-size: 0.875rem;
+        }
+
+        .boss-eta {
+            text-align: right;
+            color: var(--text-dim);
+            font-size: 0.875rem;
+        }
+
+        .hp-bar-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .hp-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .hp-bar {
+            height: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
+
+        .hp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF6B6B, #FF4444);
+            transition: width 0.5s ease;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+        }
+
+        .milestone-badges {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .milestone-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dimmer);
+            transition: all 0.3s;
+        }
+
+        .milestone-badge.completed {
+            background: rgba(0, 212, 170, 0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Revenue Streams */
+        .revenue-streams {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .revenue-stream-card {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stream-name {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .stream-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .btn-primary:hover {
+            background: #00f5c4;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--glass);
+            color: var(--text);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        /* Activity Feed */
+        .activity-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--text-dimmer);
+            white-space: nowrap;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-desc {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        /* Priority List */
+        .priority-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .priority-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .priority-text {
+            flex: 1;
+            font-size: 0.9375rem;
+        }
+
+        .priority-text.completed {
+            text-decoration: line-through;
+            color: var(--text-dim);
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--red);
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 1.25rem;
+        }
+
+        .priority-item:hover .delete-btn {
+            opacity: 1;
+        }
+
+        /* Agent Cards */
+        .agent-card {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .agent-status {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .agent-status.online { background: var(--green); box-shadow: 0 0 10px var(--green); }
+        .agent-status.busy { background: var(--yellow); box-shadow: 0 0 10px var(--yellow); }
+        .agent-status.offline { background: var(--red); box-shadow: 0 0 10px var(--red); }
+
+        .agent-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .agent-role {
+            color: var(--text-dim);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-dimmer);
+        }
+
+        /* Kanban */
+        .kanban-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .project-selector {
+            padding: 0.625rem 1rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.875rem;
+            outline: none;
+        }
+
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .kanban-column {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 1rem;
+            min-height: 500px;
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .column-title {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .column-count {
+            background: var(--glass);
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+
+        .add-card-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .task-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            position: relative;
+            border-left: 3px solid transparent;
+        }
+
+        .task-card.priority-high { border-left-color: var(--red); }
+        .task-card.priority-medium { border-left-color: var(--yellow); }
+        .task-card.priority-low { border-left-color: var(--green); }
+
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .task-desc {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            margin-bottom: 0.75rem;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .task-tag {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            background: rgba(0, 212, 170, 0.15);
+            color: var(--accent);
+        }
+
+        .task-priority-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .task-date {
+            font-size: 0.75rem;
+            color: var(--text-dimmer);
+            margin-left: auto;
+        }
+
+        /* Revenue Gauge */
+        .revenue-gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .gauge-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        .gauge-svg {
+            width: 300px;
+            height: 300px;
+        }
+
+        .gauge-text {
+            font-size: 3rem;
+            font-weight: 800;
+            fill: var(--accent);
+        }
+
+        .gauge-subtitle {
+            font-size: 1rem;
+            fill: var(--text-dim);
+        }
+
+        .gauge-footer {
+            margin-top: 1rem;
+            color: var(--text-dim);
+            font-size: 0.875rem;
+        }
+
+        /* Timeline */
+        .timeline-container {
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .timeline {
+            display: flex;
+            align-items: center;
+            min-width: 1200px;
+            padding: 2rem 0;
+            position: relative;
+        }
+
+        .timeline-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex: 1;
+        }
+
+        .node-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--glass-border);
+            border: 3px solid var(--bg);
+            z-index: 2;
+            position: relative;
+        }
+
+        .node-dot.completed {
+            background: var(--green);
+            box-shadow: 0 0 20px var(--green);
+        }
+
+        .node-dot.current {
+            background: var(--yellow);
+            box-shadow: 0 0 20px var(--yellow);
+            animation: pulse 2s infinite;
+        }
+
+        .node-card {
+            position: absolute;
+            top: 40px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 1rem;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .node-badge {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .node-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .node-date {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, var(--green) 0%, var(--green) var(--progress, 0%), var(--glass-border) var(--progress, 0%));
+            z-index: 1;
+        }
+
+        /* Phase Cards */
+        .phase-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .phase-card {
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+        }
+
+        .phase-card.phase-1 { border-left-color: var(--green); }
+        .phase-card.phase-2 { border-left-color: var(--blue); }
+        .phase-card.phase-3 { border-left-color: var(--orange); }
+        .phase-card.phase-4 { border-left-color: var(--red); }
+
+        .phase-header {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .phase-period {
+            color: var(--text-dim);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .phase-desc {
+            color: var(--text-dim);
+            font-size: 0.9375rem;
+        }
+
+        /* Intel Report */
+        .intel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .intel-timestamp {
+            color: var(--text-dim);
+            font-size: 0.875rem;
+        }
+
+        .intel-report {
+            margin-bottom: 2rem;
+        }
+
+        .report-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .report-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .story-section {
+            margin-top: 1.5rem;
+        }
+
+        .story-section-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--orange);
+        }
+
+        .story-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .story-item:last-child {
+            border-bottom: none;
+        }
+
+        .story-number {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            color: var(--bg);
+            border-radius: 50%;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            line-height: 24px;
+            margin-right: 0.5rem;
+        }
+
+        .story-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .story-source {
+            color: var(--accent);
+            font-size: 0.875rem;
+            text-decoration: none;
+        }
+
+        .story-desc {
+            color: var(--text-dim);
+            margin: 0.5rem 0;
+        }
+
+        .story-analysis {
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            background: rgba(0, 212, 170, 0.05);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+        }
+
+        .story-analysis strong {
+            color: var(--accent);
+        }
+
+        /* Meeting Cards */
+        .meeting-kpis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-items-section {
+            margin-top: 2rem;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+            margin-bottom: 0.75rem;
+        }
+
+        .action-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-top: 0.25rem;
+            cursor: pointer;
+        }
+
+        .action-content {
+            flex: 1;
+        }
+
+        .action-person {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .action-from {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        .priority-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .priority-badge.high { background: rgba(255, 68, 68, 0.2); color: var(--red); }
+        .priority-badge.medium { background: rgba(255, 215, 0, 0.2); color: var(--yellow); }
+        .priority-badge.low { background: rgba(0, 212, 170, 0.2); color: var(--green); }
+
+        /* CRM Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.active { background: rgba(0, 212, 170, 0.2); color: var(--green); }
+        .status-badge.pending { background: rgba(255, 215, 0, 0.2); color: var(--yellow); }
+        .status-badge.churned { background: rgba(255, 68, 68, 0.2); color: var(--red); }
+
+        /* Pipeline */
+        .pipeline-stages {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .pipeline-stage {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .stage-header {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .pipeline-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+        }
+
+        .deal-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .deal-value {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .deal-meta {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(5, 5, 8, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.9375rem;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            border-color: var(--accent);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-tabs {
+                order: 2;
+                width: 100%;
+            }
+
+            .header-right {
+                order: 1;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .welcome h1 {
+                font-size: 1.5rem;
+            }
+
+            .metric-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="app">
-        <!-- Sidebar Navigation -->
-        <nav class="sidebar">
-            <div class="logo">MISSION CONTROL</div>
-            <ul class="nav-menu">
-                <li><a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a></li>
-                <li><a href="#milestones" class="nav-link" data-section="milestones">Milestones</a></li>
-                <li><a href="#activity" class="nav-link" data-section="activity">Daily Activity</a></li>
-                <li><a href="#weekly" class="nav-link" data-section="weekly">Weekly Rollup</a></li>
-                <li><a href="#clients" class="nav-link" data-section="clients">Clients</a></li>
-                <li><a href="#automations" class="nav-link" data-section="automations">Automation Lab</a></li>
-                <li><a href="#pipeline" class="nav-link" data-section="pipeline">Pipeline</a></li>
-                <li><a href="#systems" class="nav-link" data-section="systems">Systems</a></li>
-                <li><a href="#review" class="nav-link" data-section="review">Weekly Review</a></li>
-                <li><a href="#goals" class="nav-link" data-section="goals">Goal Cascade</a></li>
-            </ul>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">🚀 MISSION CONTROL</div>
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard">📊 Dashboard</button>
+            <button class="nav-tab" data-tab="command-center">🖥 Command Center</button>
+            <button class="nav-tab" data-tab="projects">📋 Projects</button>
+            <button class="nav-tab" data-tab="revenue">💰 Revenue</button>
+            <button class="nav-tab" data-tab="timeline">📅 Timeline</button>
+            <button class="nav-tab" data-tab="intel">📡 Intel</button>
+            <button class="nav-tab" data-tab="meetings">📞 Meetings</button>
+            <button class="nav-tab" data-tab="crm">👥 CRM</button>
+            <button class="nav-tab" data-tab="pipeline">🔗 Pipeline</button>
         </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Dashboard Section -->
-            <section id="dashboard" class="section active">
-                <h1>Revenue Engine</h1>
-                <div class="kpi-grid">
-                    <div class="kpi-card">
-                        <div class="kpi-label">MRR</div>
-                        <div class="kpi-value" id="kpi-mrr">$0</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">New Revenue This Month</div>
-                        <div class="kpi-value" id="kpi-new-revenue">$0</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Clients Active</div>
-                        <div class="kpi-value" id="kpi-clients">0</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Pipeline Value</div>
-                        <div class="kpi-value" id="kpi-pipeline">$0</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Close Rate</div>
-                        <div class="kpi-value" id="kpi-close-rate">0%</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Outreach Sent (Weekly)</div>
-                        <div class="kpi-value" id="kpi-outreach">0</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Calls Booked</div>
-                        <div class="kpi-value" id="kpi-calls">0</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Automations Deployed</div>
-                        <div class="kpi-value" id="kpi-automations">0</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Revenue Milestones Section -->
-            <section id="milestones" class="section">
-                <h1>Revenue Milestone Tracker</h1>
-                <div class="milestone-container">
-                    <div class="milestone-item">
-                        <div class="milestone-header">
-                            <span class="milestone-month">Month 1</span>
-                            <span class="milestone-target">$500</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" data-milestone="500"></div>
-                        </div>
-                    </div>
-                    <div class="milestone-item">
-                        <div class="milestone-header">
-                            <span class="milestone-month">Month 2</span>
-                            <span class="milestone-target">$2,000</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" data-milestone="2000"></div>
-                        </div>
-                    </div>
-                    <div class="milestone-item">
-                        <div class="milestone-header">
-                            <span class="milestone-month">Month 3</span>
-                            <span class="milestone-target">$3,000</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" data-milestone="3000"></div>
-                        </div>
-                    </div>
-                    <div class="milestone-item">
-                        <div class="milestone-header">
-                            <span class="milestone-month">Month 4</span>
-                            <span class="milestone-target">$5,000</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" data-milestone="5000"></div>
-                        </div>
-                    </div>
-                    <div class="milestone-item">
-                        <div class="milestone-header">
-                            <span class="milestone-month">Month 5</span>
-                            <span class="milestone-target">$6,000</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" data-milestone="6000"></div>
-                        </div>
-                    </div>
-                    <div class="milestone-item">
-                        <div class="milestone-header">
-                            <span class="milestone-month">Month 6</span>
-                            <span class="milestone-target">$8,000</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" data-milestone="8000"></div>
-                        </div>
-                    </div>
-                    <div class="milestone-item">
-                        <div class="milestone-header">
-                            <span class="milestone-month">Month 7</span>
-                            <span class="milestone-target">$9,000</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" data-milestone="9000"></div>
-                        </div>
-                    </div>
-                    <div class="milestone-item">
-                        <div class="milestone-header">
-                            <span class="milestone-month">Month 8</span>
-                            <span class="milestone-target">$10,000</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" data-milestone="10000"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="projection-info">
-                    <div class="projection-label">Projected Trajectory:</div>
-                    <div class="projection-value" id="projection-value">$0/month</div>
-                </div>
-            </section>
-
-            <!-- Daily Activity Section -->
-            <section id="activity" class="section">
-                <h1>Daily Activity Inputs</h1>
-                <div class="form-card">
-                    <form id="activity-form">
-                        <div class="form-group">
-                            <label>Date</label>
-                            <input type="date" id="activity-date" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Cold Emails Sent</label>
-                            <input type="number" id="cold-emails" min="0" value="0">
-                        </div>
-                        <div class="form-group">
-                            <label>DMs Sent</label>
-                            <input type="number" id="dms-sent" min="0" value="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Calls Made</label>
-                            <input type="number" id="calls-made" min="0" value="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Follow-ups Sent</label>
-                            <input type="number" id="followups-sent" min="0" value="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Leads Scraped</label>
-                            <input type="number" id="leads-scraped" min="0" value="0">
-                        </div>
-                        <button type="submit" class="btn-primary">Save Activity</button>
-                    </form>
-                </div>
-            </section>
-
-            <!-- Weekly Rollup Section -->
-            <section id="weekly" class="section">
-                <h1>Weekly Rollup</h1>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Total Outreach Volume</div>
-                        <div class="stat-value" id="weekly-outreach">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Reply Rate</div>
-                        <div class="stat-value" id="weekly-reply-rate">0%</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Book Rate</div>
-                        <div class="stat-value" id="weekly-book-rate">0%</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Close Rate</div>
-                        <div class="stat-value" id="weekly-close-rate">0%</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Conversion Rate</div>
-                        <div class="stat-value" id="weekly-conversion-rate">0%</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Clients Section -->
-            <section id="clients" class="section">
-                <h1>Client Tracker</h1>
-                <button class="btn-primary" onclick="app.showClientModal()">+ Add Client</button>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Client Name</th>
-                                <th>Automation Type</th>
-                                <th>Setup Date</th>
-                                <th>Monthly Fee</th>
-                                <th>Health Status</th>
-                                <th>Last Check</th>
-                                <th>Renewal Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="clients-table-body"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Automation Lab Section -->
-            <section id="automations" class="section">
-                <h1>Automation Lab</h1>
-                <button class="btn-primary" onclick="app.showAutomationModal()">+ Add Automation</button>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Automation Name</th>
-                                <th>Niche</th>
-                                <th>Status</th>
-                                <th>Time to Deploy</th>
-                                <th>Revenue Impact</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="automations-table-body"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Pipeline Section -->
-            <section id="pipeline" class="section">
-                <h1>Pipeline / CRM</h1>
-                <button class="btn-primary" onclick="app.showPipelineModal()">+ Add Lead</button>
-                <div class="pipeline-stats">
-                    <div class="stat-card">
-                        <div class="stat-label">Total Pipeline Value</div>
-                        <div class="stat-value" id="total-pipeline-value">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Weighted Revenue</div>
-                        <div class="stat-value" id="weighted-revenue">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Close Rate</div>
-                        <div class="stat-value" id="pipeline-close-rate">0%</div>
-                    </div>
-                </div>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Lead Name</th>
-                                <th>Source</th>
-                                <th>Estimated Value</th>
-                                <th>Close Probability</th>
-                                <th>Stage</th>
-                                <th>Outreach Tasks</th>
-                                <th>Notes</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pipeline-table-body"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Systems Section -->
-            <section id="systems" class="section">
-                <h1>Agent / System Tracking</h1>
-                <button class="btn-primary" onclick="app.showSystemModal()">+ Add System</button>
-                <div class="filter-tabs">
-                    <button class="filter-tab active" onclick="app.filterSystems('all')">All</button>
-                    <button class="filter-tab" onclick="app.filterSystems('active')">Active Only</button>
-                    <button class="filter-tab" onclick="app.filterSystems('failing')">Failing Only</button>
-                </div>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Agent Name</th>
-                                <th>Function</th>
-                                <th>Status</th>
-                                <th>Last Run</th>
-                                <th>Success Rate</th>
-                                <th>Linked Workflows</th>
-                                <th>Impact Metric</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="systems-table-body"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Weekly Review Section -->
-            <section id="review" class="section">
-                <h1>Weekly Review</h1>
-                <div class="form-card">
-                    <form id="review-form">
-                        <div class="form-group">
-                            <label>Week Ending</label>
-                            <input type="date" id="review-week" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Wins</label>
-                            <textarea id="review-wins" rows="3"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Misses</label>
-                            <textarea id="review-misses" rows="3"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Revenue Review (Auto-Pulled)</label>
-                            <div class="auto-pulled" id="review-revenue">MRR: $0 | New Revenue: $0</div>
-                        </div>
-                        <div class="form-group">
-                            <label>Pipeline Review (Auto-Pulled)</label>
-                            <div class="auto-pulled" id="review-pipeline-value">Pipeline Value: $0</div>
-                        </div>
-                        <div class="form-group">
-                            <label>Goal Progress (Auto-Pulled)</label>
-                            <div class="auto-pulled" id="review-goal-progress">Clients: 0 / Target: 5</div>
-                        </div>
-                        <div class="form-group">
-                            <label>System Issues</label>
-                            <textarea id="review-issues" rows="3"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Process Improvements</label>
-                            <textarea id="review-improvements" rows="3"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Focus for Next Week</label>
-                            <textarea id="review-focus" rows="3"></textarea>
-                        </div>
-                        <button type="submit" class="btn-primary">Save Review</button>
-                    </form>
-                </div>
-            </section>
-
-            <!-- Goal Cascade Section -->
-            <section id="goals" class="section">
-                <h1>Goal Cascade</h1>
-                <div class="goals-hierarchy">
-                    <div class="goal-level">
-                        <h2>Annual Vision</h2>
-                        <div class="goal-card">
-                            <div class="goal-item">$10k MRR</div>
-                            <textarea id="goal-annual" placeholder="Specific client/system goals"></textarea>
-                            <button class="btn-secondary" onclick="app.saveGoals()">Save</button>
-                        </div>
-                    </div>
-                    <div class="goal-level">
-                        <h2>90-Day Objectives</h2>
-                        <div class="goal-card">
-                            <div class="goal-item">5 Clients, $2,500/month minimum</div>
-                            <textarea id="goal-90day" placeholder="Additional 90-day objectives"></textarea>
-                            <button class="btn-secondary" onclick="app.saveGoals()">Save</button>
-                        </div>
-                    </div>
-                    <div class="goal-level">
-                        <h2>Weekly Targets</h2>
-                        <div class="goal-card">
-                            <textarea id="goal-weekly" placeholder="Weekly commitments"></textarea>
-                            <button class="btn-secondary" onclick="app.saveGoals()">Save</button>
-                        </div>
-                    </div>
-                    <div class="goal-level">
-                        <h2>Daily Focus</h2>
-                        <div class="goal-card">
-                            <textarea id="goal-daily" placeholder="Today's priorities"></textarea>
-                            <button class="btn-secondary" onclick="app.saveGoals()">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Modal Templates -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="app.closeModal()">&times;</span>
-            <div id="modal-body"></div>
+        <div class="header-right">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search (⌘K)">
+            </div>
+            <div class="live-clock" id="liveClock"></div>
+            <div class="status-dot"></div>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Tab 1: Dashboard -->
+        <div class="tab-content active" id="dashboard">
+            <div class="welcome">
+                <h1 id="welcomeGreeting"></h1>
+                <div class="welcome-time" id="welcomeTime"></div>
+            </div>
+
+            <div class="grid-4">
+                <div class="glass-card metric-card accent-green">
+                    <div class="metric-icon">💰</div>
+                    <div class="metric-label">Monthly Revenue</div>
+                    <div class="metric-value" id="dashMRR">$0</div>
+                    <div class="metric-trend">↑ Building momentum</div>
+                </div>
+                <div class="glass-card metric-card accent-blue">
+                    <div class="metric-icon">👥</div>
+                    <div class="metric-label">Active Clients</div>
+                    <div class="metric-value" id="dashClients">0</div>
+                    <div class="metric-trend">Target: 5 clients</div>
+                </div>
+                <div class="glass-card metric-card accent-purple">
+                    <div class="metric-icon">🤖</div>
+                    <div class="metric-label">Agent Tasks Today</div>
+                    <div class="metric-value" id="dashTasks">0</div>
+                    <div class="metric-trend">Automation running</div>
+                </div>
+                <div class="glass-card metric-card accent-orange">
+                    <div class="metric-icon">⏱</div>
+                    <div class="metric-label">Days to Goal</div>
+                    <div class="metric-value" id="dashDaysToGoal">0</div>
+                    <div class="metric-trend">Oct 2026 Target</div>
+                </div>
+            </div>
+
+            <!-- Boss Battle -->
+            <div class="glass-card boss-battle">
+                <div class="boss-header">
+                    <div class="boss-title">
+                        <h2>⚔️ BOSS BATTLE</h2>
+                        <div class="boss-subtitle">The $10K/mo Beast</div>
+                    </div>
+                    <div class="boss-eta" id="bossETA">⚔️ Kill ETA: TBD</div>
+                </div>
+                <div class="hp-bar-container">
+                    <div class="hp-label">
+                        <span>BOSS HP</span>
+                        <span id="bossHP">0 / 10,000 HP</span>
+                    </div>
+                    <div class="hp-bar">
+                        <div class="hp-fill" id="hpFill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="milestone-badges">
+                    <div class="milestone-badge" data-milestone="5">⚔️ 5 CLIENTS</div>
+                    <div class="milestone-badge" data-milestone="10">🛡 10 CLIENTS</div>
+                    <div class="milestone-badge" data-milestone="20">💰 20 CLIENTS</div>
+                    <div class="milestone-badge" data-milestone="40">🏆 40 CLIENTS</div>
+                    <div class="milestone-badge" data-milestone="10000">👑 $10K MRR</div>
+                </div>
+                <div class="revenue-streams">
+                    <div class="glass-card revenue-stream-card">
+                        <div class="stream-name">AI Automation</div>
+                        <div class="stream-value" id="streamAI">$0</div>
+                    </div>
+                    <div class="glass-card revenue-stream-card">
+                        <div class="stream-name">Missed Call Recovery</div>
+                        <div class="stream-value" id="streamMissed">$0</div>
+                    </div>
+                    <div class="glass-card revenue-stream-card">
+                        <div class="stream-name">Workflow Builds</div>
+                        <div class="stream-value" id="streamWorkflow">$0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Feed & Priorities -->
+            <div class="grid-2">
+                <div class="glass-card">
+                    <div class="section-header">
+                        <h3 class="section-title">📋 Activity Feed</h3>
+                    </div>
+                    <div class="activity-feed" id="activityFeed">
+                        <div class="activity-item">
+                            <div class="activity-time">Now</div>
+                            <div class="activity-content">
+                                <div class="activity-title">Mission Control Online</div>
+                                <div class="activity-desc">Dashboard initialized successfully</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="section-header">
+                        <h3 class="section-title">🎯 Top Priorities</h3>
+                        <button class="btn btn-primary" onclick="addPriority()">+ Add</button>
+                    </div>
+                    <div id="priorityList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Command Center -->
+        <div class="tab-content" id="command-center">
+            <div class="section-header">
+                <h2 class="section-title">🖥 AI Agent Command Center</h2>
+                <button class="btn btn-primary" onclick="addAgent()">+ Add Agent</button>
+            </div>
+            <div class="grid-3" id="agentGrid"></div>
+
+            <div class="glass-card" style="margin-top: 2rem;">
+                <h3 class="section-title">📊 Executive Decisions</h3>
+                <div id="decisionsList"></div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Projects -->
+        <div class="tab-content" id="projects">
+            <div class="kanban-header">
+                <div>
+                    <select class="project-selector" id="projectSelector">
+                        <option value="default">Default Project</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="addProject()">+ New Project</button>
+            </div>
+
+            <div class="kanban-board">
+                <div class="kanban-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            📁 Backlog
+                            <span class="column-count" data-column="backlog">0</span>
+                        </div>
+                        <button class="add-card-btn" onclick="addTask('backlog')">+</button>
+                    </div>
+                    <div class="column-cards" data-column="backlog"></div>
+                </div>
+                <div class="kanban-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            🔄 In Progress
+                            <span class="column-count" data-column="progress">0</span>
+                        </div>
+                        <button class="add-card-btn" onclick="addTask('progress')">+</button>
+                    </div>
+                    <div class="column-cards" data-column="progress"></div>
+                </div>
+                <div class="kanban-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            👀 Review
+                            <span class="column-count" data-column="review">0</span>
+                        </div>
+                        <button class="add-card-btn" onclick="addTask('review')">+</button>
+                    </div>
+                    <div class="column-cards" data-column="review"></div>
+                </div>
+                <div class="kanban-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            ✅ Done
+                            <span class="column-count" data-column="done">0</span>
+                        </div>
+                        <button class="add-card-btn" onclick="addTask('done')">+</button>
+                    </div>
+                    <div class="column-cards" data-column="done"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Revenue -->
+        <div class="tab-content" id="revenue">
+            <div class="revenue-gauge-container">
+                <div class="gauge-title">MONTHLY RECURRING REVENUE</div>
+                <svg class="gauge-svg" viewBox="0 0 300 300">
+                    <circle cx="150" cy="150" r="120" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="20"/>
+                    <circle id="gaugeProgress" cx="150" cy="150" r="120" fill="none" stroke="url(#gaugeGradient)" stroke-width="20" 
+                            stroke-dasharray="753.98" stroke-dashoffset="753.98" transform="rotate(-90 150 150)"
+                            stroke-linecap="round"/>
+                    <defs>
+                        <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#00D4AA;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#00f5c4;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <text x="150" y="140" text-anchor="middle" class="gauge-text" id="gaugeMRR">$0</text>
+                    <text x="150" y="170" text-anchor="middle" class="gauge-subtitle" id="gaugePercent">0% of goal</text>
+                </svg>
+                <div class="gauge-footer" id="gaugeFooter">$0 / $10,000 per month</div>
+            </div>
+
+            <div class="revenue-streams">
+                <div class="glass-card revenue-stream-card">
+                    <div class="stream-name">AI Automation</div>
+                    <div class="stream-value" id="revStreamAI">$0</div>
+                </div>
+                <div class="glass-card revenue-stream-card">
+                    <div class="stream-name">Missed Call Recovery</div>
+                    <div class="stream-value" id="revStreamMissed">$0</div>
+                </div>
+                <div class="glass-card revenue-stream-card">
+                    <div class="stream-name">Workflow Builds</div>
+                    <div class="stream-value" id="revStreamWorkflow">$0</div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="margin-top: 2rem;">
+                <div class="section-header">
+                    <h3 class="section-title">👥 Client List</h3>
+                    <button class="btn btn-primary" onclick="addClient()">+ Add Client</button>
+                </div>
+                <table class="data-table" id="clientTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Monthly Value</th>
+                            <th>Status</th>
+                            <th>Stream</th>
+                            <th>Start Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="glass-card" style="margin-top: 2rem;">
+                <h3 class="section-title">📈 Revenue Projections</h3>
+                <div class="grid-2">
+                    <div>
+                        <div class="metric-label">Projected Annual</div>
+                        <div class="metric-value" id="projectedAnnual">$0</div>
+                    </div>
+                    <div>
+                        <div class="metric-label">Monthly Growth Needed</div>
+                        <div class="metric-value" id="monthlyGrowth">$0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Timeline -->
+        <div class="tab-content" id="timeline">
+            <h2 class="section-title" style="text-align: center; margin-bottom: 2rem;">🚀 LAUNCH ROADMAP TO $10K/MO</h2>
+            
+            <div class="timeline-container">
+                <div class="timeline" id="timelineTrack">
+                    <div class="timeline-line" style="--progress: 10%"></div>
+                </div>
+            </div>
+
+            <div class="phase-cards">
+                <div class="glass-card phase-card phase-1">
+                    <div class="phase-header">Phase 1: Foundation</div>
+                    <div class="phase-period">Feb - Mar 2026</div>
+                    <div class="phase-desc">Build systems, first automations, establish infrastructure</div>
+                </div>
+                <div class="glass-card phase-card phase-2">
+                    <div class="phase-header">Phase 2: First Clients</div>
+                    <div class="phase-period">Mar - Apr 2026</div>
+                    <div class="phase-desc">Outreach, close first 5 clients, validate product-market fit</div>
+                </div>
+                <div class="glass-card phase-card phase-3">
+                    <div class="phase-header">Phase 3: Sales Machine</div>
+                    <div class="phase-period">Apr - May 2026</div>
+                    <div class="phase-desc">Landing page, case studies, pricing packages, marketing content</div>
+                </div>
+                <div class="glass-card phase-card phase-4">
+                    <div class="phase-header">Phase 4: Scale</div>
+                    <div class="phase-period">May - Oct 2026</div>
+                    <div class="phase-desc">Content marketing, SEO, partnerships, scale to 40+ clients</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 6: Intel -->
+        <div class="tab-content" id="intel">
+            <div class="intel-header">
+                <h2 class="section-title">📡 Intelligence Report</h2>
+                <div>
+                    <span class="intel-timestamp" id="intelTimestamp">Last updated: Just now</span>
+                    <button class="btn btn-primary" onclick="addIntel()" style="margin-left: 1rem;">+ Add Intel</button>
+                </div>
+            </div>
+
+            <div class="glass-card intel-report">
+                <div class="report-header">
+                    <span style="font-size: 1.5rem;">📰</span>
+                    <div>
+                        <div style="color: var(--text-dim); font-size: 0.875rem;">Today</div>
+                        <h3 class="report-title">AI Intel Report — February 20, 2026</h3>
+                    </div>
+                </div>
+
+                <div class="story-section">
+                    <div class="story-section-title">🔥 TOP STORIES</div>
+                    <div id="intelStories">
+                        <div class="story-item">
+                            <div class="story-title">
+                                <span class="story-number">1</span>
+                                Welcome to Mission Control
+                            </div>
+                            <a href="#" class="story-source">Internal</a>
+                            <div class="story-desc">
+                                Your intelligence dashboard is now live. Add AI news, industry trends, and competitive intelligence to stay ahead.
+                            </div>
+                            <div class="story-analysis">
+                                <strong>Why it matters for Founder:</strong> Staying informed on AI developments helps identify new automation opportunities for home service clients.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 7: Meetings -->
+        <div class="tab-content" id="meetings">
+            <div class="meeting-kpis">
+                <div class="glass-card">
+                    <div class="metric-label">Meetings This Month</div>
+                    <div class="metric-value" id="meetingsCount">0</div>
+                </div>
+                <div class="glass-card">
+                    <div class="metric-label">Total Hours</div>
+                    <div class="metric-value" id="meetingsHours">0h</div>
+                </div>
+                <div class="glass-card">
+                    <div class="metric-label">Action Items</div>
+                    <div class="metric-value" id="meetingsActions">0/0</div>
+                </div>
+            </div>
+
+            <div class="glass-card action-items-section">
+                <div class="section-header">
+                    <h3 class="section-title">⚡ ACTION ITEMS</h3>
+                    <button class="btn btn-primary" onclick="addActionItem()">+ Add Action</button>
+                </div>
+                <div id="actionItemsList"></div>
+            </div>
+
+            <div class="glass-card" style="margin-top: 2rem;">
+                <div class="section-header">
+                    <h3 class="section-title">📅 Scheduled Meetings</h3>
+                    <button class="btn btn-primary" onclick="addMeeting()">+ Schedule Meeting</button>
+                </div>
+                <div id="meetingsList"></div>
+            </div>
+        </div>
+
+        <!-- Tab 8: CRM -->
+        <div class="tab-content" id="crm">
+            <div class="section-header">
+                <h2 class="section-title">👥 Contact Management</h2>
+                <button class="btn btn-primary" onclick="addContact()">+ Add Contact</button>
+            </div>
+
+            <div class="glass-card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Source</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="crmTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 9: Pipeline -->
+        <div class="tab-content" id="pipeline">
+            <div class="grid-4" style="margin-bottom: 2rem;">
+                <div class="glass-card">
+                    <div class="metric-label">Total Pipeline Value</div>
+                    <div class="metric-value" id="pipelineTotal">$0</div>
+                </div>
+                <div class="glass-card">
+                    <div class="metric-label">Weighted Revenue</div>
+                    <div class="metric-value" id="pipelineWeighted">$0</div>
+                </div>
+                <div class="glass-card">
+                    <div class="metric-label">Close Rate</div>
+                    <div class="metric-value" id="pipelineCloseRate">0%</div>
+                </div>
+                <div class="glass-card">
+                    <div class="metric-label">Deals Count</div>
+                    <div class="metric-value" id="pipelineDeals">0</div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2 class="section-title">🔗 Sales Pipeline</h2>
+                <button class="btn btn-primary" onclick="addDeal()">+ Add Deal</button>
+            </div>
+
+            <div class="pipeline-stages" id="pipelineStages">
+                <div class="pipeline-stage">
+                    <div class="stage-header">Prospect</div>
+                    <div class="stage-cards" data-stage="prospect"></div>
+                </div>
+                <div class="pipeline-stage">
+                    <div class="stage-header">Contacted</div>
+                    <div class="stage-cards" data-stage="contacted"></div>
+                </div>
+                <div class="pipeline-stage">
+                    <div class="stage-header">Booked Call</div>
+                    <div class="stage-cards" data-stage="booked"></div>
+                </div>
+                <div class="pipeline-stage">
+                    <div class="stage-header">Proposal Sent</div>
+                    <div class="stage-cards" data-stage="proposal"></div>
+                </div>
+                <div class="pipeline-stage">
+                    <div class="stage-header">Closed Won</div>
+                    <div class="stage-cards" data-stage="won"></div>
+                </div>
+                <div class="pipeline-stage">
+                    <div class="stage-header">Closed Lost</div>
+                    <div class="stage-cards" data-stage="lost"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Modal Title</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============ DATA STORE ============
+        const GOAL_DATE = new Date('2026-10-31');
+        const GOAL_AMOUNT = 10000;
+
+        const store = {
+            priorities: [],
+            agents: [],
+            decisions: [],
+            tasks: [],
+            clients: [],
+            intel: [],
+            meetings: [],
+            actionItems: [],
+            contacts: [],
+            deals: [],
+            
+            save() {
+                localStorage.setItem('missionControlData', JSON.stringify(this));
+            },
+            
+            load() {
+                const data = localStorage.getItem('missionControlData');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    Object.assign(this, parsed);
+                }
+            }
+        };
+
+        // ============ INITIALIZATION ============
+        function init() {
+            store.load();
+            updateClock();
+            updateWelcome();
+            updateDashboard();
+            renderPriorities();
+            renderAgents();
+            renderTasks();
+            renderClients();
+            renderIntel();
+            renderMeetings();
+            renderActionItems();
+            renderContacts();
+            renderDeals();
+            renderTimeline();
+            
+            setInterval(updateClock, 1000);
+            setInterval(updateDashboard, 60000);
+        }
+
+        // ============ CLOCK & WELCOME ============
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            document.getElementById('liveClock').textContent = timeStr;
+        }
+
+        function updateWelcome() {
+            const now = new Date();
+            const hour = now.getHours();
+            let greeting = 'Good evening';
+            if (hour < 12) greeting = 'Good morning';
+            else if (hour < 18) greeting = 'Good afternoon';
+            
+            document.getElementById('welcomeGreeting').textContent = `${greeting}, Founder`;
+            document.getElementById('welcomeTime').textContent = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // ============ DASHBOARD ============
+        function updateDashboard() {
+            // Calculate MRR
+            const mrr = store.clients
+                .filter(c => c.status === 'active')
+                .reduce((sum, c) => sum + (parseFloat(c.value) || 0), 0);
+            
+            const activeClients = store.clients.filter(c => c.status === 'active').length;
+            const agentTasks = store.tasks.filter(t => t.column === 'progress').length;
+            
+            // Days to goal
+            const now = new Date();
+            const daysToGoal = Math.ceil((GOAL_DATE - now) / (1000 * 60 * 60 * 24));
+            
+            document.getElementById('dashMRR').textContent = `$${mrr.toLocaleString()}`;
+            document.getElementById('dashClients').textContent = activeClients;
+            document.getElementById('dashTasks').textContent = agentTasks;
+            document.getElementById('dashDaysToGoal').textContent = daysToGoal;
+            
+            // Boss Battle
+            const remaining = GOAL_AMOUNT - mrr;
+            const progress = (mrr / GOAL_AMOUNT) * 100;
+            document.getElementById('bossHP').textContent = `${mrr.toLocaleString()} / 10,000 HP`;
+            document.getElementById('hpFill').style.width = `${progress}%`;
+            document.getElementById('bossETA').textContent = `⚔️ Kill ETA: ${daysToGoal} days (Oct 31, 2026)`;
+            
+            // Milestone badges
+            document.querySelectorAll('.milestone-badge').forEach(badge => {
+                const milestone = parseInt(badge.dataset.milestone);
+                if ((milestone <= 100 && activeClients >= milestone) || (milestone > 100 && mrr >= milestone)) {
+                    badge.classList.add('completed');
+                } else {
+                    badge.classList.remove('completed');
+                }
+            });
+            
+            // Revenue streams
+            const streams = {
+                ai: 0,
+                missed: 0,
+                workflow: 0
+            };
+            
+            store.clients.filter(c => c.status === 'active').forEach(c => {
+                const val = parseFloat(c.value) || 0;
+                if (c.stream === 'ai') streams.ai += val;
+                else if (c.stream === 'missed') streams.missed += val;
+                else if (c.stream === 'workflow') streams.workflow += val;
+            });
+            
+            document.getElementById('streamAI').textContent = `$${streams.ai}`;
+            document.getElementById('streamMissed').textContent = `$${streams.missed}`;
+            document.getElementById('streamWorkflow').textContent = `$${streams.workflow}`;
+            
+            // Revenue tab updates
+            document.getElementById('gaugeMRR').textContent = `$${mrr.toLocaleString()}`;
+            document.getElementById('gaugePercent').textContent = `${Math.round(progress)}% of goal`;
+            document.getElementById('gaugeFooter').textContent = `$${mrr.toLocaleString()} / $10,000 per month`;
+            
+            const circumference = 2 * Math.PI * 120;
+            const offset = circumference - (progress / 100) * circumference;
+            document.getElementById('gaugeProgress').style.strokeDashoffset = offset;
+            
+            document.getElementById('revStreamAI').textContent = `$${streams.ai}`;
+            document.getElementById('revStreamMissed').textContent = `$${streams.missed}`;
+            document.getElementById('revStreamWorkflow').textContent = `$${streams.workflow}`;
+            
+            document.getElementById('projectedAnnual').textContent = `$${(mrr * 12).toLocaleString()}`;
+            const monthsLeft = Math.ceil((GOAL_DATE - now) / (1000 * 60 * 60 * 24 * 30));
+            const growthNeeded = monthsLeft > 0 ? Math.ceil((GOAL_AMOUNT - mrr) / monthsLeft) : 0;
+            document.getElementById('monthlyGrowth').textContent = `$${growthNeeded.toLocaleString()}`;
+        }
+
+        // ============ TAB SWITCHING ============
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+                
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(targetTab).classList.add('active');
+            });
+        });
+
+        // ============ PRIORITIES ============
+        function renderPriorities() {
+            const list = document.getElementById('priorityList');
+            list.innerHTML = store.priorities.map((p, i) => `
+                <div class="priority-item">
+                    <input type="checkbox" ${p.completed ? 'checked' : ''} onchange="togglePriority(${i})">
+                    <span class="priority-text ${p.completed ? 'completed' : ''}">${p.text}</span>
+                    <button class="delete-btn" onclick="deletePriority(${i})">×</button>
+                </div>
+            `).join('');
+        }
+
+        function addPriority() {
+            const text = prompt('Enter priority:');
+            if (text) {
+                store.priorities.push({ text, completed: false });
+                store.save();
+                renderPriorities();
+            }
+        }
+
+        function togglePriority(index) {
+            store.priorities[index].completed = !store.priorities[index].completed;
+            store.save();
+            renderPriorities();
+        }
+
+        function deletePriority(index) {
+            store.priorities.splice(index, 1);
+            store.save();
+            renderPriorities();
+        }
+
+        // ============ AGENTS ============
+        function renderAgents() {
+            const grid = document.getElementById('agentGrid');
+            if (!store.agents.length) {
+                grid.innerHTML = `
+                    <div class="glass-card">
+                        <p style="color: var(--text-dim);">No agents yet. Add your first AI agent to get started.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = store.agents.map((a, i) => `
+                <div class="glass-card agent-card" onclick="viewAgent(${i})">
+                    <div class="agent-status ${a.status}"></div>
+                    <div class="agent-name">${a.name}</div>
+                    <div class="agent-role">${a.role}</div>
+                    <div class="agent-meta">
+                        <span>${a.model}</span>
+                        <span>${a.lastActive || 'Never'}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addAgent() {
+            showModal('Add Agent', `
+                <form onsubmit="saveAgent(event)">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input class="form-input" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <input class="form-input" name="role" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Model</label>
+                        <input class="form-input" name="model" placeholder="e.g., GPT-4" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" name="status">
+                            <option value="online">Online</option>
+                            <option value="busy">Busy</option>
+                            <option value="offline">Offline</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Agent</button>
+                </form>
+            `);
+        }
+
+        function saveAgent(e) {
+            e.preventDefault();
+            const form = e.target;
+            store.agents.push({
+                name: form.name.value,
+                role: form.role.value,
+                model: form.model.value,
+                status: form.status.value,
+                lastActive: new Date().toLocaleString()
+            });
+            store.save();
+            renderAgents();
+            closeModal();
+        }
+
+        // ============ TASKS / KANBAN ============
+        function renderTasks() {
+            ['backlog', 'progress', 'review', 'done'].forEach(column => {
+                const tasks = store.tasks.filter(t => t.column === column);
+                const container = document.querySelector(`.column-cards[data-column="${column}"]`);
+                const count = document.querySelector(`.column-count[data-column="${column}"]`);
+                
+                count.textContent = tasks.length;
+                container.innerHTML = tasks.map((t, i) => `
+                    <div class="task-card priority-${t.priority}" onclick="editTask(${store.tasks.indexOf(t)})">
+                        <div class="task-title">${t.title}</div>
+                        <div class="task-desc">${t.description || ''}</div>
+                        <div class="task-meta">
+                            ${t.tags ? t.tags.map(tag => `<span class="task-tag">${tag}</span>`).join('') : ''}
+                            <div class="task-priority-dot" style="background: var(--${t.priority === 'high' ? 'red' : t.priority === 'medium' ? 'yellow' : 'green'})"></div>
+                            <span class="task-date">${t.date || ''}</span>
+                        </div>
+                    </div>
+                `).join('');
+            });
+        }
+
+        function addTask(column) {
+            showModal('Add Task', `
+                <form onsubmit="saveTask(event, '${column}')">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input class="form-input" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" name="description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <select class="form-select" name="priority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tags (comma-separated)</label>
+                        <input class="form-input" name="tags">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input class="form-input" name="date" type="date">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Task</button>
+                </form>
+            `);
+        }
+
+        function saveTask(e, column) {
+            e.preventDefault();
+            const form = e.target;
+            store.tasks.push({
+                column,
+                title: form.title.value,
+                description: form.description.value,
+                priority: form.priority.value,
+                tags: form.tags.value ? form.tags.value.split(',').map(t => t.trim()) : [],
+                date: form.date.value
+            });
+            store.save();
+            renderTasks();
+            closeModal();
+        }
+
+        function editTask(index) {
+            const task = store.tasks[index];
+            showModal('Edit Task', `
+                <form onsubmit="updateTask(event, ${index})">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input class="form-input" name="title" value="${task.title}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" name="description">${task.description || ''}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Column</label>
+                        <select class="form-select" name="column">
+                            <option value="backlog" ${task.column === 'backlog' ? 'selected' : ''}>Backlog</option>
+                            <option value="progress" ${task.column === 'progress' ? 'selected' : ''}>In Progress</option>
+                            <option value="review" ${task.column === 'review' ? 'selected' : ''}>Review</option>
+                            <option value="done" ${task.column === 'done' ? 'selected' : ''}>Done</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <select class="form-select" name="priority">
+                            <option value="low" ${task.priority === 'low' ? 'selected' : ''}>Low</option>
+                            <option value="medium" ${task.priority === 'medium' ? 'selected' : ''}>Medium</option>
+                            <option value="high" ${task.priority === 'high' ? 'selected' : ''}>High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tags (comma-separated)</label>
+                        <input class="form-input" name="tags" value="${task.tags ? task.tags.join(', ') : ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input class="form-input" name="date" type="date" value="${task.date || ''}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Task</button>
+                    <button type="button" class="btn btn-secondary" onclick="deleteTask(${index})" style="background: var(--red); color: white; margin-left: 0.5rem;">Delete</button>
+                </form>
+            `);
+        }
+
+        function updateTask(e, index) {
+            e.preventDefault();
+            const form = e.target;
+            store.tasks[index] = {
+                column: form.column.value,
+                title: form.title.value,
+                description: form.description.value,
+                priority: form.priority.value,
+                tags: form.tags.value ? form.tags.value.split(',').map(t => t.trim()) : [],
+                date: form.date.value
+            };
+            store.save();
+            renderTasks();
+            closeModal();
+        }
+
+        function deleteTask(index) {
+            if (confirm('Delete this task?')) {
+                store.tasks.splice(index, 1);
+                store.save();
+                renderTasks();
+                closeModal();
+            }
+        }
+
+        // ============ CLIENTS ============
+        function renderClients() {
+            const tbody = document.getElementById('clientTableBody');
+            tbody.innerHTML = store.clients.map((c, i) => `
+                <tr>
+                    <td>${c.name}</td>
+                    <td>$${c.value}</td>
+                    <td><span class="status-badge ${c.status}">${c.status}</span></td>
+                    <td>${c.stream || 'N/A'}</td>
+                    <td>${c.startDate || 'N/A'}</td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="editClient(${i})" style="padding: 0.25rem 0.75rem;">Edit</button>
+                        <button class="btn btn-secondary" onclick="deleteClient(${i})" style="padding: 0.25rem 0.75rem; background: var(--red); margin-left: 0.5rem;">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+            updateDashboard();
+        }
+
+        function addClient() {
+            showModal('Add Client', `
+                <form onsubmit="saveClient(event)">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input class="form-input" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Monthly Value ($)</label>
+                        <input class="form-input" name="value" type="number" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" name="status">
+                            <option value="active">Active</option>
+                            <option value="pending">Pending</option>
+                            <option value="churned">Churned</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Revenue Stream</label>
+                        <select class="form-select" name="stream">
+                            <option value="ai">AI Automation</option>
+                            <option value="missed">Missed Call Recovery</option>
+                            <option value="workflow">Workflow Builds</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Start Date</label>
+                        <input class="form-input" name="startDate" type="date">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Client</button>
+                </form>
+            `);
+        }
+
+        function saveClient(e) {
+            e.preventDefault();
+            const form = e.target;
+            store.clients.push({
+                name: form.name.value,
+                value: form.value.value,
+                status: form.status.value,
+                stream: form.stream.value,
+                startDate: form.startDate.value
+            });
+            store.save();
+            renderClients();
+            closeModal();
+        }
+
+        function editClient(index) {
+            const client = store.clients[index];
+            showModal('Edit Client', `
+                <form onsubmit="updateClient(event, ${index})">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input class="form-input" name="name" value="${client.name}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Monthly Value ($)</label>
+                        <input class="form-input" name="value" type="number" value="${client.value}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" name="status">
+                            <option value="active" ${client.status === 'active' ? 'selected' : ''}>Active</option>
+                            <option value="pending" ${client.status === 'pending' ? 'selected' : ''}>Pending</option>
+                            <option value="churned" ${client.status === 'churned' ? 'selected' : ''}>Churned</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Revenue Stream</label>
+                        <select class="form-select" name="stream">
+                            <option value="ai" ${client.stream === 'ai' ? 'selected' : ''}>AI Automation</option>
+                            <option value="missed" ${client.stream === 'missed' ? 'selected' : ''}>Missed Call Recovery</option>
+                            <option value="workflow" ${client.stream === 'workflow' ? 'selected' : ''}>Workflow Builds</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Start Date</label>
+                        <input class="form-input" name="startDate" type="date" value="${client.startDate || ''}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Client</button>
+                </form>
+            `);
+        }
+
+        function updateClient(e, index) {
+            e.preventDefault();
+            const form = e.target;
+            store.clients[index] = {
+                name: form.name.value,
+                value: form.value.value,
+                status: form.status.value,
+                stream: form.stream.value,
+                startDate: form.startDate.value
+            };
+            store.save();
+            renderClients();
+            closeModal();
+        }
+
+        function deleteClient(index) {
+            if (confirm('Delete this client?')) {
+                store.clients.splice(index, 1);
+                store.save();
+                renderClients();
+            }
+        }
+
+        // ============ TIMELINE ============
+        function renderTimeline() {
+            const milestones = [
+                { title: 'Mission Control Live', date: 'Feb 2026', status: 'completed', badge: '✅' },
+                { title: 'First Automation Built', date: 'Feb 2026', status: 'current', badge: '⏳' },
+                { title: 'First Client', date: 'Mar 2026', status: 'future', badge: '⏳' },
+                { title: '5 Clients', date: 'Apr 2026', status: 'future', badge: '⏳' },
+                { title: 'Landing Page', date: 'May 2026', status: 'future', badge: '⏳' },
+                { title: '10 Clients', date: 'Jun 2026', status: 'future', badge: '⏳' },
+                { title: '$5K MRR', date: 'Jul 2026', status: 'future', badge: '⏳' },
+                { title: '20 Clients', date: 'Aug 2026', status: 'future', badge: '⏳' },
+                { title: '$10K MRR', date: 'Oct 2026', status: 'future', badge: '⏳' }
+            ];
+
+            const track = document.getElementById('timelineTrack');
+            track.innerHTML = milestones.map((m, i) => `
+                <div class="timeline-node">
+                    <div class="node-dot ${m.status}"></div>
+                    <div class="node-card">
+                        <div class="node-badge">${m.badge}</div>
+                        <div class="node-title">${m.title}</div>
+                        <div class="node-date">${m.date}</div>
+                    </div>
+                </div>
+            `).join('') + '<div class="timeline-line" style="--progress: 15%"></div>';
+        }
+
+        // ============ INTEL ============
+        function renderIntel() {
+            // Placeholder - users will add their own stories
+        }
+
+        function addIntel() {
+            showModal('Add Intel Item', `
+                <form onsubmit="saveIntel(event)">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input class="form-input" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Source URL</label>
+                        <input class="form-input" name="source" type="url">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" name="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Analysis</label>
+                        <textarea class="form-textarea" name="analysis"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" name="category">
+                            <option value="ai">AI News</option>
+                            <option value="industry">Industry Trends</option>
+                            <option value="competitor">Competitor Watch</option>
+                            <option value="opportunity">Opportunities</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Intel</button>
+                </form>
+            `);
+        }
+
+        function saveIntel(e) {
+            e.preventDefault();
+            const form = e.target;
+            store.intel.push({
+                title: form.title.value,
+                source: form.source.value,
+                description: form.description.value,
+                analysis: form.analysis.value,
+                category: form.category.value,
+                date: new Date().toISOString()
+            });
+            store.save();
+            closeModal();
+            alert('Intel item saved!');
+        }
+
+        // ============ MEETINGS ============
+        function renderMeetings() {
+            document.getElementById('meetingsCount').textContent = store.meetings.length;
+            // Calculate total hours
+            // Placeholder for meeting list
+        }
+
+        function addMeeting() {
+            showModal('Schedule Meeting', `
+                <form onsubmit="saveMeeting(event)">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input class="form-input" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date & Time</label>
+                        <input class="form-input" name="datetime" type="datetime-local" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Attendees</label>
+                        <input class="form-input" name="attendees" placeholder="Comma-separated">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Type</label>
+                        <select class="form-select" name="type">
+                            <option value="call">Call</option>
+                            <option value="zoom">Zoom</option>
+                            <option value="in-person">In-Person</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Agenda</label>
+                        <textarea class="form-textarea" name="agenda"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Schedule Meeting</button>
+                </form>
+            `);
+        }
+
+        function saveMeeting(e) {
+            e.preventDefault();
+            const form = e.target;
+            store.meetings.push({
+                title: form.title.value,
+                datetime: form.datetime.value,
+                attendees: form.attendees.value.split(',').map(a => a.trim()),
+                type: form.type.value,
+                agenda: form.agenda.value
+            });
+            store.save();
+            renderMeetings();
+            closeModal();
+        }
+
+        // ============ ACTION ITEMS ============
+        function renderActionItems() {
+            const list = document.getElementById('actionItemsList');
+            if (!store.actionItems.length) {
+                list.innerHTML = '<p style="color: var(--text-dim);">No action items yet.</p>';
+                return;
+            }
+            list.innerHTML = store.actionItems.map((item, i) => `
+                <div class="action-item">
+                    <input type="checkbox" class="action-checkbox" ${item.completed ? 'checked' : ''} onchange="toggleActionItem(${i})">
+                    <div class="action-content">
+                        <div class="action-person">${item.person}</div>
+                        <div class="action-from">From: ${item.meeting}</div>
+                    </div>
+                    <span class="priority-badge ${item.priority}">${item.priority}</span>
+                    <span style="color: var(--text-dim); font-size: 0.875rem;">${item.date}</span>
+                </div>
+            `).join('');
+        }
+
+        function addActionItem() {
+            showModal('Add Action Item', `
+                <form onsubmit="saveActionItem(event)">
+                    <div class="form-group">
+                        <label class="form-label">Person/Task</label>
+                        <input class="form-input" name="person" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">From Meeting</label>
+                        <input class="form-input" name="meeting" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <select class="form-select" name="priority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Due Date</label>
+                        <input class="form-input" name="date" type="date" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Action Item</button>
+                </form>
+            `);
+        }
+
+        function saveActionItem(e) {
+            e.preventDefault();
+            const form = e.target;
+            store.actionItems.push({
+                person: form.person.value,
+                meeting: form.meeting.value,
+                priority: form.priority.value,
+                date: form.date.value,
+                completed: false
+            });
+            store.save();
+            renderActionItems();
+            closeModal();
+        }
+
+        function toggleActionItem(index) {
+            store.actionItems[index].completed = !store.actionItems[index].completed;
+            store.save();
+            renderActionItems();
+        }
+
+        // ============ CRM ============
+        function renderContacts() {
+            const tbody = document.getElementById('crmTableBody');
+            if (!store.contacts.length) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-dim);">No contacts yet</td></tr>';
+                return;
+            }
+            tbody.innerHTML = store.contacts.map((c, i) => `
+                <tr>
+                    <td>${c.name}</td>
+                    <td>${c.company || 'N/A'}</td>
+                    <td>${c.email || 'N/A'}</td>
+                    <td>${c.phone || 'N/A'}</td>
+                    <td>${c.source || 'N/A'}</td>
+                    <td><span class="status-badge ${c.status}">${c.status}</span></td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="editContact(${i})" style="padding: 0.25rem 0.75rem;">Edit</button>
+                        <button class="btn btn-secondary" onclick="deleteContact(${i})" style="padding: 0.25rem 0.75rem; background: var(--red); margin-left: 0.5rem;">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function addContact() {
+            showModal('Add Contact', `
+                <form onsubmit="saveContact(event)">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input class="form-input" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Company</label>
+                        <input class="form-input" name="company">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input class="form-input" name="email" type="email">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input class="form-input" name="phone" type="tel">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Source</label>
+                        <input class="form-input" name="source" placeholder="e.g., Referral, Website">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" name="status">
+                            <option value="active">Active</option>
+                            <option value="pending">Pending</option>
+                            <option value="churned">Churned</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Contact</button>
+                </form>
+            `);
+        }
+
+        function saveContact(e) {
+            e.preventDefault();
+            const form = e.target;
+            store.contacts.push({
+                name: form.name.value,
+                company: form.company.value,
+                email: form.email.value,
+                phone: form.phone.value,
+                source: form.source.value,
+                status: form.status.value
+            });
+            store.save();
+            renderContacts();
+            closeModal();
+        }
+
+        function editContact(index) {
+            const contact = store.contacts[index];
+            showModal('Edit Contact', `
+                <form onsubmit="updateContact(event, ${index})">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input class="form-input" name="name" value="${contact.name}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Company</label>
+                        <input class="form-input" name="company" value="${contact.company || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input class="form-input" name="email" type="email" value="${contact.email || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input class="form-input" name="phone" type="tel" value="${contact.phone || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Source</label>
+                        <input class="form-input" name="source" value="${contact.source || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" name="status">
+                            <option value="active" ${contact.status === 'active' ? 'selected' : ''}>Active</option>
+                            <option value="pending" ${contact.status === 'pending' ? 'selected' : ''}>Pending</option>
+                            <option value="churned" ${contact.status === 'churned' ? 'selected' : ''}>Churned</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Contact</button>
+                </form>
+            `);
+        }
+
+        function updateContact(e, index) {
+            e.preventDefault();
+            const form = e.target;
+            store.contacts[index] = {
+                name: form.name.value,
+                company: form.company.value,
+                email: form.email.value,
+                phone: form.phone.value,
+                source: form.source.value,
+                status: form.status.value
+            };
+            store.save();
+            renderContacts();
+            closeModal();
+        }
+
+        function deleteContact(index) {
+            if (confirm('Delete this contact?')) {
+                store.contacts.splice(index, 1);
+                store.save();
+                renderContacts();
+            }
+        }
+
+        // ============ PIPELINE ============
+        function renderDeals() {
+            const stages = ['prospect', 'contacted', 'booked', 'proposal', 'won', 'lost'];
+            stages.forEach(stage => {
+                const deals = store.deals.filter(d => d.stage === stage);
+                const container = document.querySelector(`.stage-cards[data-stage="${stage}"]`);
+                container.innerHTML = deals.map((d, i) => `
+                    <div class="pipeline-card" onclick="editDeal(${store.deals.indexOf(d)})">
+                        <div class="deal-name">${d.name}</div>
+                        <div class="deal-value">$${d.value}</div>
+                        <div class="deal-meta">${d.source || 'Unknown source'} • ${d.probability}%</div>
+                    </div>
+                `).join('');
+            });
+
+            // Update rollups
+            const totalValue = store.deals.reduce((sum, d) => sum + parseFloat(d.value || 0), 0);
+            const weightedValue = store.deals.reduce((sum, d) => sum + (parseFloat(d.value || 0) * (d.probability / 100)), 0);
+            const wonDeals = store.deals.filter(d => d.stage === 'won').length;
+            const lostDeals = store.deals.filter(d => d.stage === 'lost').length;
+            const closeRate = (wonDeals + lostDeals) > 0 ? Math.round((wonDeals / (wonDeals + lostDeals)) * 100) : 0;
+
+            document.getElementById('pipelineTotal').textContent = `$${totalValue.toLocaleString()}`;
+            document.getElementById('pipelineWeighted').textContent = `$${Math.round(weightedValue).toLocaleString()}`;
+            document.getElementById('pipelineCloseRate').textContent = `${closeRate}%`;
+            document.getElementById('pipelineDeals').textContent = store.deals.length;
+        }
+
+        function addDeal() {
+            showModal('Add Deal', `
+                <form onsubmit="saveDeal(event)">
+                    <div class="form-group">
+                        <label class="form-label">Lead Name</label>
+                        <input class="form-input" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estimated Value ($)</label>
+                        <input class="form-input" name="value" type="number" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Source</label>
+                        <input class="form-input" name="source">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Stage</label>
+                        <select class="form-select" name="stage">
+                            <option value="prospect">Prospect</option>
+                            <option value="contacted">Contacted</option>
+                            <option value="booked">Booked Call</option>
+                            <option value="proposal">Proposal Sent</option>
+                            <option value="won">Closed Won</option>
+                            <option value="lost">Closed Lost</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Close Probability (%)</label>
+                        <input class="form-input" name="probability" type="number" min="0" max="100" value="50">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-textarea" name="notes"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Deal</button>
+                </form>
+            `);
+        }
+
+        function saveDeal(e) {
+            e.preventDefault();
+            const form = e.target;
+            store.deals.push({
+                name: form.name.value,
+                value: form.value.value,
+                source: form.source.value,
+                stage: form.stage.value,
+                probability: parseInt(form.probability.value),
+                notes: form.notes.value
+            });
+            store.save();
+            renderDeals();
+            closeModal();
+        }
+
+        function editDeal(index) {
+            const deal = store.deals[index];
+            showModal('Edit Deal', `
+                <form onsubmit="updateDeal(event, ${index})">
+                    <div class="form-group">
+                        <label class="form-label">Lead Name</label>
+                        <input class="form-input" name="name" value="${deal.name}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estimated Value ($)</label>
+                        <input class="form-input" name="value" type="number" value="${deal.value}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Source</label>
+                        <input class="form-input" name="source" value="${deal.source || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Stage</label>
+                        <select class="form-select" name="stage">
+                            <option value="prospect" ${deal.stage === 'prospect' ? 'selected' : ''}>Prospect</option>
+                            <option value="contacted" ${deal.stage === 'contacted' ? 'selected' : ''}>Contacted</option>
+                            <option value="booked" ${deal.stage === 'booked' ? 'selected' : ''}>Booked Call</option>
+                            <option value="proposal" ${deal.stage === 'proposal' ? 'selected' : ''}>Proposal Sent</option>
+                            <option value="won" ${deal.stage === 'won' ? 'selected' : ''}>Closed Won</option>
+                            <option value="lost" ${deal.stage === 'lost' ? 'selected' : ''}>Closed Lost</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Close Probability (%)</label>
+                        <input class="form-input" name="probability" type="number" min="0" max="100" value="${deal.probability}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-textarea" name="notes">${deal.notes || ''}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Deal</button>
+                    <button type="button" class="btn btn-secondary" onclick="deleteDeal(${index})" style="background: var(--red); color: white; margin-left: 0.5rem;">Delete</button>
+                </form>
+            `);
+        }
+
+        function updateDeal(e, index) {
+            e.preventDefault();
+            const form = e.target;
+            store.deals[index] = {
+                name: form.name.value,
+                value: form.value.value,
+                source: form.source.value,
+                stage: form.stage.value,
+                probability: parseInt(form.probability.value),
+                notes: form.notes.value
+            };
+            store.save();
+            renderDeals();
+            closeModal();
+        }
+
+        function deleteDeal(index) {
+            if (confirm('Delete this deal?')) {
+                store.deals.splice(index, 1);
+                store.save();
+                renderDeals();
+                closeModal();
+            }
+        }
+
+        // ============ MODAL ============
+        function showModal(title, body) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = body;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Close modal on background click
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') closeModal();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                document.querySelector('.search-input').focus();
+            }
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // ============ PROJECTS ============
+        function addProject() {
+            const name = prompt('Enter project name:');
+            if (name) {
+                const selector = document.getElementById('projectSelector');
+                const option = document.createElement('option');
+                option.value = name.toLowerCase().replace(/\s/g, '-');
+                option.textContent = name;
+                selector.appendChild(option);
+                selector.value = option.value;
+            }
+        }
+
+        function viewAgent(index) {
+            const agent = store.agents[index];
+            showModal(agent.name, `
+                <div style="margin-bottom: 1rem;">
+                    <strong>Role:</strong> ${agent.role}<br>
+                    <strong>Model:</strong> ${agent.model}<br>
+                    <strong>Status:</strong> <span style="color: var(--${agent.status === 'online' ? 'green' : agent.status === 'busy' ? 'yellow' : 'red'})">${agent.status}</span><br>
+                    <strong>Last Active:</strong> ${agent.lastActive}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Send Task</label>
+                    <textarea class="form-textarea" id="agentTask" placeholder="Describe the task..."></textarea>
+                    <button class="btn btn-primary" onclick="sendAgentTask(${index})" style="margin-top: 0.5rem;">Send Task</button>
+                </div>
+            `);
+        }
+
+        function sendAgentTask(index) {
+            const task = document.getElementById('agentTask').value;
+            if (task) {
+                alert(`Task sent to ${store.agents[index].name}`);
+                closeModal();
+            }
+        }
+
+        // ============ START APP ============
+        init();
+    </script>
 </body>
 </html>
