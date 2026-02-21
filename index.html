@@ -631,6 +631,66 @@
             margin-left: auto;
         }
 
+        /* Client Leaderboard */
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        .leaderboard-item:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateX(4px);
+        }
+        .leaderboard-rank {
+            font-size: 1.5rem;
+            font-weight: 800;
+            width: 48px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .leaderboard-rank.gold { color: #FFD700; }
+        .leaderboard-rank.silver { color: #C0C0C0; }
+        .leaderboard-rank.bronze { color: #CD7F32; }
+        .leaderboard-rank.normal { color: var(--text-dim); }
+        .leaderboard-info {
+            flex: 1;
+            margin-left: 1rem;
+        }
+        .leaderboard-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .leaderboard-meta {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+        .leaderboard-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        .leaderboard-bar-wrap {
+            width: 150px;
+            height: 6px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 3px;
+            margin-left: 1.5rem;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+        .leaderboard-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #00FFD4);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
         /* Revenue Gauge */
         .revenue-gauge-container {
             display: flex;
@@ -1399,6 +1459,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Monthly Value</th>
+                            <th>Revenue Generated</th>
                             <th>Status</th>
                             <th>Stream</th>
                             <th>Start Date</th>
@@ -1407,6 +1468,15 @@
                     </thead>
                     <tbody id="clientTableBody"></tbody>
                 </table>
+            </div>
+
+            <!-- Client Leaderboard -->
+            <div class="glass-card" style="margin-top: 2rem;">
+                <div class="section-header">
+                    <h3 class="section-title">🏆 Client Leaderboard — Revenue Generated</h3>
+                </div>
+                <div class="metric-label" style="margin-bottom: 1rem;">Total revenue you've generated for all clients: <span id="totalRevenueGenerated" style="color: var(--accent); font-weight: 700; font-size: 1.2rem;">$0</span></div>
+                <div id="clientLeaderboard"></div>
             </div>
 
             <div class="glass-card" style="margin-top: 2rem;">
@@ -2035,6 +2105,7 @@
                 <tr>
                     <td>${c.name}</td>
                     <td>$${c.value}</td>
+                    <td style="color: var(--accent); font-weight: 600;">$${Number(c.revenueGenerated || 0).toLocaleString()}</td>
                     <td><span class="status-badge ${c.status}">${c.status}</span></td>
                     <td>${c.stream || 'N/A'}</td>
                     <td>${c.startDate || 'N/A'}</td>
@@ -2044,7 +2115,36 @@
                     </td>
                 </tr>
             `).join('');
+            renderLeaderboard();
             updateDashboard();
+        }
+
+        function renderLeaderboard() {
+            const board = document.getElementById('clientLeaderboard');
+            if (!board) return;
+            const ranked = store.clients
+                .map((c, i) => ({...c, idx: i, rev: Number(c.revenueGenerated || 0)}))
+                .sort((a, b) => b.rev - a.rev);
+            const maxRev = ranked.length ? Math.max(ranked[0].rev, 1) : 1;
+            const totalRev = ranked.reduce((sum, c) => sum + c.rev, 0);
+            document.getElementById('totalRevenueGenerated').textContent = '$' + totalRev.toLocaleString();
+            const medals = ['🥇', '🥈', '🥉'];
+            const rankClasses = ['gold', 'silver', 'bronze'];
+            board.innerHTML = ranked.length === 0 
+                ? '<div style="color: var(--text-dim); padding: 1rem;">Add clients and track revenue generated to see the leaderboard.</div>'
+                : ranked.map((c, i) => `
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank ${i < 3 ? rankClasses[i] : 'normal'}">${i < 3 ? medals[i] : '#' + (i+1)}</div>
+                    <div class="leaderboard-info">
+                        <div class="leaderboard-name">${c.name}</div>
+                        <div class="leaderboard-meta">${c.stream || 'N/A'} · ${c.status} · Paying $${c.value}/mo</div>
+                    </div>
+                    <div class="leaderboard-bar-wrap">
+                        <div class="leaderboard-bar" style="width: ${(c.rev / maxRev * 100)}%"></div>
+                    </div>
+                    <div class="leaderboard-value">$${c.rev.toLocaleString()}</div>
+                </div>
+            `).join('');
         }
 
         function addClient() {
@@ -2057,6 +2157,10 @@
                     <div class="form-group">
                         <label class="form-label">Monthly Value ($)</label>
                         <input class="form-input" name="value" type="number" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Revenue Generated for Client ($)</label>
+                        <input class="form-input" name="revenueGenerated" type="number" value="0" placeholder="Total revenue your automations made them">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Status</label>
@@ -2089,6 +2193,7 @@
             store.clients.push({
                 name: form.name.value,
                 value: form.value.value,
+                revenueGenerated: form.revenueGenerated.value || 0,
                 status: form.status.value,
                 stream: form.stream.value,
                 startDate: form.startDate.value
@@ -2109,6 +2214,10 @@
                     <div class="form-group">
                         <label class="form-label">Monthly Value ($)</label>
                         <input class="form-input" name="value" type="number" value="${client.value}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Revenue Generated for Client ($)</label>
+                        <input class="form-input" name="revenueGenerated" type="number" value="${client.revenueGenerated || 0}" placeholder="Total revenue your automations made them">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Status</label>
@@ -2141,6 +2250,7 @@
             store.clients[index] = {
                 name: form.name.value,
                 value: form.value.value,
+                revenueGenerated: form.revenueGenerated.value || 0,
                 status: form.status.value,
                 stream: form.stream.value,
                 startDate: form.startDate.value
