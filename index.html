@@ -584,9 +584,27 @@
             border-radius: 8px;
             padding: 1rem;
             margin-bottom: 0.75rem;
-            cursor: pointer;
+            cursor: grab;
             position: relative;
             border-left: 3px solid transparent;
+            transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+        }
+        .task-card:active { cursor: grabbing; }
+        .task-card.dragging {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+        .kanban-column.drag-over {
+            background: rgba(0, 212, 170, 0.06);
+            border: 1px dashed var(--accent);
+            border-radius: 12px;
+        }
+        .column-cards .drop-indicator {
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+            margin: 0.25rem 0;
+            transition: opacity 0.15s;
         }
 
         .task-card.priority-high { border-left-color: var(--red); }
@@ -1968,8 +1986,10 @@
                 const count = document.querySelector(`.column-count[data-column="${column}"]`);
                 
                 count.textContent = tasks.length;
-                container.innerHTML = tasks.map((t, i) => `
-                    <div class="task-card priority-${t.priority}" onclick="editTask(${store.tasks.indexOf(t)})">
+                container.innerHTML = tasks.map((t, i) => {
+                    const globalIdx = store.tasks.indexOf(t);
+                    return `
+                    <div class="task-card priority-${t.priority}" draggable="true" data-task-index="${globalIdx}" onclick="editTask(${globalIdx})">
                         <div class="task-title">${t.title}</div>
                         <div class="task-desc">${t.description || ''}</div>
                         <div class="task-meta">
@@ -1978,7 +1998,47 @@
                             <span class="task-date">${t.date || ''}</span>
                         </div>
                     </div>
-                `).join('');
+                `}).join('');
+            });
+            initDragAndDrop();
+        }
+
+        // ============ DRAG & DROP ============
+        function initDragAndDrop() {
+            document.querySelectorAll('.task-card[draggable]').forEach(card => {
+                card.addEventListener('dragstart', e => {
+                    card.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', card.dataset.taskIndex);
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                card.addEventListener('dragend', e => {
+                    card.classList.remove('dragging');
+                    document.querySelectorAll('.kanban-column').forEach(col => col.classList.remove('drag-over'));
+                });
+            });
+
+            document.querySelectorAll('.column-cards').forEach(container => {
+                container.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    container.closest('.kanban-column').classList.add('drag-over');
+                });
+                container.addEventListener('dragleave', e => {
+                    if (!container.contains(e.relatedTarget)) {
+                        container.closest('.kanban-column').classList.remove('drag-over');
+                    }
+                });
+                container.addEventListener('drop', e => {
+                    e.preventDefault();
+                    const column = container.dataset.column;
+                    const taskIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    if (!isNaN(taskIndex) && store.tasks[taskIndex]) {
+                        store.tasks[taskIndex].column = column;
+                        store.save();
+                        renderTasks();
+                    }
+                    container.closest('.kanban-column').classList.remove('drag-over');
+                });
             });
         }
 
