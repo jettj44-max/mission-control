@@ -2004,40 +2004,52 @@
         }
 
         // ============ DRAG & DROP ============
+        let draggedTaskIndex = null;
+
         function initDragAndDrop() {
             document.querySelectorAll('.task-card[draggable]').forEach(card => {
                 card.addEventListener('dragstart', e => {
+                    draggedTaskIndex = parseInt(card.dataset.taskIndex);
                     card.classList.add('dragging');
                     e.dataTransfer.setData('text/plain', card.dataset.taskIndex);
                     e.dataTransfer.effectAllowed = 'move';
+                    // Needed for Firefox
+                    setTimeout(() => card.style.display = card.style.display, 0);
                 });
                 card.addEventListener('dragend', e => {
                     card.classList.remove('dragging');
+                    draggedTaskIndex = null;
                     document.querySelectorAll('.kanban-column').forEach(col => col.classList.remove('drag-over'));
                 });
             });
 
-            document.querySelectorAll('.column-cards').forEach(container => {
-                container.addEventListener('dragover', e => {
+            // Listen on the ENTIRE kanban-column (not just column-cards) so drops work anywhere in the column
+            document.querySelectorAll('.kanban-column').forEach(col => {
+                const container = col.querySelector('.column-cards');
+                if (!container) return;
+                const targetColumn = container.dataset.column;
+
+                col.addEventListener('dragover', e => {
                     e.preventDefault();
                     e.dataTransfer.dropEffect = 'move';
-                    container.closest('.kanban-column').classList.add('drag-over');
+                    col.classList.add('drag-over');
                 });
-                container.addEventListener('dragleave', e => {
-                    if (!container.contains(e.relatedTarget)) {
-                        container.closest('.kanban-column').classList.remove('drag-over');
+                col.addEventListener('dragleave', e => {
+                    // Only remove highlight if we actually left the column
+                    if (!col.contains(e.relatedTarget)) {
+                        col.classList.remove('drag-over');
                     }
                 });
-                container.addEventListener('drop', e => {
+                col.addEventListener('drop', e => {
                     e.preventDefault();
-                    const column = container.dataset.column;
+                    e.stopPropagation();
+                    col.classList.remove('drag-over');
                     const taskIndex = parseInt(e.dataTransfer.getData('text/plain'));
-                    if (!isNaN(taskIndex) && store.tasks[taskIndex]) {
-                        store.tasks[taskIndex].column = column;
+                    if (!isNaN(taskIndex) && store.tasks[taskIndex] && targetColumn) {
+                        store.tasks[taskIndex].column = targetColumn;
                         store.save();
                         renderTasks();
                     }
-                    container.closest('.kanban-column').classList.remove('drag-over');
                 });
             });
         }
